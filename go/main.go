@@ -8,22 +8,30 @@ import (
 	"image/draw"
 )
 
-func newImage( width int, height int, c color.Color ) image.Image {
-	dim := image.Rect(0,0,width,height)
-	img := image.NewNRGBA(dim)
+func newImage(width int, height int, c color.Color) *image.RGBA {
+	dim := image.Rect(0, 0, width, height)
+	img := image.NewRGBA(dim)
 
-	draw.Draw(img, dim, &image.Uniform{c}, image.ZP, draw.Src )
+	draw.Draw(img, dim, &image.Uniform{c}, image.ZP, draw.Src)
 
 	return img
 }
 
+func saveImage(filename string, img image.Image) {
+	file, err := os.Create(filename)
+	if err != nil {
+		panic(err)
+	}
+	png.Encode(file, img)
+}
+
 func main() {
 
-	img := newImage( 100, 100, color.Black );
+	img := newImage(100, 100, color.Black);
 
-	file, err := os.Create( "output/image.png")
-	if err != nil {
-		panic( err )
-	}
-	png.Encode( file, img )
+	var line LineFunc = draw_line_solution;
+
+	line(13, 20, 80, 40, img, color.White);
+
+	saveImage("output/image.png", img)
 }

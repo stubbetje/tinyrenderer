@@ -1,6 +1,6 @@
 
 output/image.png: output main
-	./main
+	time ./main
 	cp output/image.png output/image.$(shell date +%Y%m%d_%H%I%S).png
 
 output:
