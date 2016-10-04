@@ -6,5 +6,5 @@ output/image.png: output main
 output:
 	mkdir output
 
-main: $(wildcard *.go)
+main: $(wildcard *.go) $(wildcard */*.go)
 	go build -o main . 
