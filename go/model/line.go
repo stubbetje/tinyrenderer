@@ -1,4 +1,4 @@
-package main
+package model
 
 import (
 	"image"
@@ -8,7 +8,7 @@ import (
 
 type LineFunc func(x0 int, y0 int, x1 int, y1 int, img *image.RGBA, c color.Color);
 
-func draw_line_example(x0 int, y0 int, x1 int, y1 int, img *image.RGBA, c color.Color) {
+func Draw_line_example(x0 int, y0 int, x1 int, y1 int, img *image.RGBA, c color.Color) {
 
 	var t float64;
 
@@ -49,7 +49,7 @@ func draw_line_example(x0 int, y0 int, x1 int, y1 int, img *image.RGBA, c color.
 //
 //}
 
-func draw_line_solution(x0 int, y0 int, x1 int, y1 int, img *image.RGBA, c color.Color) {
+func Draw_line_solution(x0 int, y0 int, x1 int, y1 int, img *image.RGBA, c color.Color) {
 
 	var steep bool = false;
 	if math.Abs(float64(x0 - x1)) < math.Abs(float64(y0 - y1)) {

@@ -21,7 +21,7 @@ func newImage(width int, height int, c color.Color) *image.RGBA {
 
 func saveImage(filename string, img image.Image) {
 
-	im := imaging.FlipV( img )
+	im := imaging.FlipV(img)
 
 	file, err := os.Create(filename)
 	if err != nil {
@@ -30,12 +30,24 @@ func saveImage(filename string, img image.Image) {
 	png.Encode(file, im)
 }
 
-func main() {
+func do_triangles(img *image.RGBA) {
 
-	var width, height int = 800, 800
-	img := newImage(width, height, color.Black);
+	var t0 []model.Vec2i = []model.Vec2i{{10,70},{50,160},{70,80}}
+	var t1 []model.Vec2i = []model.Vec2i{{180,50},{150,1},{70,180}}
+	var t2 []model.Vec2i = []model.Vec2i{{180,150},{120,160},{130,180}}
 
-	var line LineFunc = draw_line_solution;
+	var red = color.RGBA{0xFF,0,0,0XFF}
+	var white = color.White
+	var green = color.RGBA{0,0XFF,0,0XFF}
+
+	model.Triangle_first(t0[0], t0[1], t0[2], img, red);
+	model.Triangle_first(t1[0], t1[1], t1[2], img, white);
+	model.Triangle_first(t2[0], t2[1], t2[2], img, green);
+}
+
+func do_render_head(img *image.RGBA) {
+
+	var line model.LineFunc = model.Draw_line_solution;
 
 	m, err := model.LoadFromFile("../obj/african_head/african_head.obj")
 	if err != nil {
@@ -44,6 +56,16 @@ func main() {
 
 	//line(13, 20, 80, 40, img, color.White);
 
+	dim := img.Bounds().Size()
+
+	// float width factor  = fw
+	// float height factor = fh
+	var fw, fh float64
+	fw = float64(dim.X) / 2.0
+	fh = float64(dim.Y) / 2.0
+
+	c := color.RGBA{R:0, G:255, B:255, A:0xFF}
+
 	for i := 0; i < m.Nfaces(); i += 1 {
 		face := m.Face(i)
 
@@ -51,15 +73,25 @@ func main() {
 			v0 := m.Vertice(face[j])
 			v1 := m.Vertice(face[(j + 1) % 3])
 
-			x0 := (v0.X + 1.0) * float64(width) / 2.0
-			y0 := (v0.Y + 1.0) * float64(height) / 2.0
+			x0 := (v0.X + 1.0) * fw
+			y0 := (v0.Y + 1.0) * fh
 
-			x1 := (v1.X + 1.0) * float64(width) / 2.0
-			y1 := (v1.Y + 1.0) * float64(height) / 2.0
+			x1 := (v1.X + 1.0) * fw
+			y1 := (v1.Y + 1.0) * fh
 
-			line( int(x0), int(y0), int(x1), int(y1), img, color.White)
+			line(int(x0), int(y0), int(x1), int(y1), img, c)
 		}
 	}
+}
+
+func main() {
+
+	var width, height int = 200, 200
+	img := newImage(width, height, color.Black);
+
+	//do_render_head( img )
+
+	do_triangles( img )
 
 	saveImage("output/image.png", img)
 }
