@@ -40,9 +40,9 @@ func do_triangles(img *image.RGBA) {
 	var white = color.White
 	var green = color.RGBA{0,0XFF,0,0XFF}
 
-	model.Triangle_first(t0[0], t0[1], t0[2], img, red);
-	model.Triangle_first(t1[0], t1[1], t1[2], img, white);
-	model.Triangle_first(t2[0], t2[1], t2[2], img, green);
+	model.Triangle_first_halve(t0[0], t0[1], t0[2], img, red);
+	model.Triangle_first_halve(t1[0], t1[1], t1[2], img, white);
+	model.Triangle_first_halve(t2[0], t2[1], t2[2], img, green);
 }
 
 func do_render_head(img *image.RGBA) {
