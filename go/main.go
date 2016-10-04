@@ -6,6 +6,7 @@ import (
 	"os"
 	"image/color"
 	"image/draw"
+	"github.com/disintegration/imaging"
 	"./model"
 )
 
@@ -19,11 +20,14 @@ func newImage(width int, height int, c color.Color) *image.RGBA {
 }
 
 func saveImage(filename string, img image.Image) {
+
+	im := imaging.FlipV( img )
+
 	file, err := os.Create(filename)
 	if err != nil {
 		panic(err)
 	}
-	png.Encode(file, img)
+	png.Encode(file, im)
 }
 
 func main() {
