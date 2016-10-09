@@ -32,13 +32,13 @@ func saveImage(filename string, img image.Image) {
 
 func do_triangles(img *image.RGBA) {
 
-	var t0 []model.Vec2i = []model.Vec2i{{10,70},{50,160},{70,80}}
-	var t1 []model.Vec2i = []model.Vec2i{{180,50},{150,1},{70,180}}
-	var t2 []model.Vec2i = []model.Vec2i{{180,150},{120,160},{130,180}}
+	var t0 []model.Vec2i = []model.Vec2i{{10, 70}, {50, 160}, {70, 80}}
+	var t1 []model.Vec2i = []model.Vec2i{{180, 50}, {150, 1}, {70, 180}}
+	var t2 []model.Vec2i = []model.Vec2i{{180, 150}, {120, 160}, {130, 180}}
 
-	var red = color.RGBA{0xFF,0,0,0XFF}
+	var red = color.RGBA{0xFF, 0, 0, 0XFF}
 	var white = color.White
-	var green = color.RGBA{0,0XFF,0,0XFF}
+	var green = color.RGBA{0, 0XFF, 0, 0XFF}
 
 	model.Triangle_fill_two_halves(t0[0], t0[1], t0[2], img, red);
 	model.Triangle_fill_two_halves(t1[0], t1[1], t1[2], img, white);
