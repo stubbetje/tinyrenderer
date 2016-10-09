@@ -8,6 +8,7 @@ import (
 	"image/draw"
 	"github.com/disintegration/imaging"
 	"./model"
+	"math/rand"
 )
 
 func newImage(width int, height int, c color.Color) *image.RGBA {
@@ -47,8 +48,6 @@ func do_triangles(img *image.RGBA) {
 
 func do_render_head(img *image.RGBA) {
 
-	var line model.LineFunc = model.Draw_line_solution;
-
 	m, err := model.LoadFromFile("../obj/african_head/african_head.obj")
 	if err != nil {
 		panic(err)
@@ -64,34 +63,34 @@ func do_render_head(img *image.RGBA) {
 	fw = float64(dim.X) / 2.0
 	fh = float64(dim.Y) / 2.0
 
-	c := color.RGBA{R:0, G:255, B:255, A:0xFF}
-
 	for i := 0; i < m.Nfaces(); i += 1 {
 		face := m.Face(i)
 
+		var points []model.Vec2i = make([]model.Vec2i, 3)
+
 		for j := 0; j < 3; j += 1 {
-			v0 := m.Vertice(face[j])
-			v1 := m.Vertice(face[(j + 1) % 3])
+			world_coords := m.Vertice(face[j])
+			points[j] = model.Vec2i{
+				X: int((world_coords.X + 1.0 ) * fw),
+				Y: int((world_coords.Y + 1.0 ) * fh),
+			}
 
-			x0 := (v0.X + 1.0) * fw
-			y0 := (v0.Y + 1.0) * fh
-
-			x1 := (v1.X + 1.0) * fw
-			y1 := (v1.Y + 1.0) * fh
-
-			line(int(x0), int(y0), int(x1), int(y1), img, c)
 		}
+
+		c := color.RGBA{ R: uint8(rand.Intn(255)), G: uint8(rand.Intn(255)), B: uint8(rand.Intn(255)), A:0xFF}
+
+		model.Triangle_fill_two_halves(points[0], points[1], points[2], img, c)
 	}
 }
 
 func main() {
 
-	var width, height int = 200, 200
+	var width, height int = 800, 800
 	img := newImage(width, height, color.Black);
 
-	//do_render_head( img )
+	do_render_head(img)
 
-	do_triangles( img )
+	//do_triangles( img )
 
 	saveImage("output/image.png", img)
 }
