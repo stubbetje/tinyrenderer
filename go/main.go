@@ -8,7 +8,6 @@ import (
 	"image/draw"
 	"github.com/disintegration/imaging"
 	"./model"
-	"math/rand"
 )
 
 func newImage(width int, height int, c color.Color) *image.RGBA {
@@ -63,23 +62,35 @@ func do_render_head(img *image.RGBA) {
 	fw = float64(dim.X) / 2.0
 	fh = float64(dim.Y) / 2.0
 
+	var light_dir model.Vec3f = model.Vec3f{0,0,-1}
+
 	for i := 0; i < m.Nfaces(); i += 1 {
 		face := m.Face(i)
 
 		var points []model.Vec2i = make([]model.Vec2i, 3)
+		var world []model.Vec3f = make([]model.Vec3f, 3)
 
 		for j := 0; j < 3; j += 1 {
-			world_coords := m.Vertice(face[j])
+
+			v := m.Vertice(face[j])
+			world[j] = v
 			points[j] = model.Vec2i{
-				X: int((world_coords.X + 1.0 ) * fw),
-				Y: int((world_coords.Y + 1.0 ) * fh),
+				X: int((v.X + 1.0 ) * fw),
+				Y: int((v.Y + 1.0 ) * fh),
 			}
 
 		}
 
-		c := color.RGBA{ R: uint8(rand.Intn(255)), G: uint8(rand.Intn(255)), B: uint8(rand.Intn(255)), A:0xFF}
+		var n model.Vec3f = world[2].Subtract(world[0]).Product(world[1].Subtract(world[0]))
+		n = n.Normalize(1)
+		intensity := n.Times(light_dir)
 
-		model.Triangle_fill_two_halves(points[0], points[1], points[2], img, c)
+		if (intensity>0) {
+			c := color.RGBA{ R: 0, G: uint8(intensity*255), B: uint8(intensity*255), A: 0xFF }
+
+			model.Triangle_fill_two_halves(points[0], points[1], points[2], img, c)
+		}
+
 	}
 }
 
